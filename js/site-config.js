@@ -6,7 +6,8 @@ window.SiteSettings = {
   phoneHref: "tel:+15551234567",
   phoneButtonLabel: "(555) 123-4567",
   mobilePhoneButtonLabel: "Get Quote",
-  email: "support@example.com",
+  email: "support@roofbridgeconnect.com",
+  privacyEmail: "privacy@roofbridgeconnect.com",
   whatsappHref: "https://wa.me/15551234567",
   businessHours: [
     "Monday-Friday: 8:00 AM - 8:00 PM",

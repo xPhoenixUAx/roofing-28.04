@@ -46,7 +46,8 @@
     const phoneHref = settings.phoneHref || "tel:+15551234567";
     const phoneDisplay = settings.phoneDisplay || "(555) 123-4567";
     const phoneButtonLabel = settings.phoneButtonLabel || phoneDisplay;
-    const email = settings.email || "support@example.com";
+    const email = settings.email || "support@roofbridgeconnect.com";
+    const privacyEmail = settings.privacyEmail || email;
     const whatsappHref = settings.whatsappHref || "https://wa.me/15551234567";
     const hours = Array.isArray(settings.businessHours) ? settings.businessHours : [];
 
@@ -65,7 +66,6 @@
 
     qsa('a[href^="tel:"]').forEach((link) => {
       link.href = phoneHref;
-      if (link.classList.contains("mobile-phone")) return;
       if (link.classList.contains("floating-cta")) {
         link.innerHTML = `${icon("phone")} ${settings.mobilePhoneButtonLabel || "Get Quote"}`;
       } else if (link.classList.contains("desktop-cta") || link.classList.contains("btn-ghost")) {
@@ -76,8 +76,10 @@
     });
 
     qsa('a[href^="mailto:"]').forEach((link) => {
-      link.href = `mailto:${email}`;
-      link.textContent = email;
+      const isPrivacyEmail = link.getAttribute("href").includes("privacy@") || link.textContent.includes("privacy@");
+      const targetEmail = isPrivacyEmail ? privacyEmail : email;
+      link.href = `mailto:${targetEmail}`;
+      link.textContent = targetEmail;
     });
 
     qsa('a[href*="wa.me"]').forEach((link) => {
@@ -97,9 +99,15 @@
     });
 
     qsa(".footer-bottom").forEach((node) => {
+      if (settings.footer?.bottomText && !node.parentElement.querySelector(".footer-support-text")) {
+        const supportText = document.createElement("p");
+        supportText.className = "footer-support-text";
+        supportText.textContent = settings.footer.bottomText;
+        node.before(supportText);
+      }
       const meta = document.createElement("p");
       meta.className = "footer-company-meta";
-      meta.textContent = `${companyName} · ${settings.address || "United States"} · ID: ${settings.companyId || "N/A"}`;
+      meta.textContent = `${companyName} | ${settings.address || "United States"} | ID: ${settings.companyId || "N/A"}`;
       node.before(meta);
       node.textContent = settings.legal?.disclaimer || node.textContent;
     });
